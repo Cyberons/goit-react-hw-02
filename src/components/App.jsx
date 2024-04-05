@@ -8,13 +8,13 @@ import Notification from './Notification/Notification';
 
 
 const App = () => {
-    // Ініціалізуємо стан за допомогою функції, яка отримує початкові значення з localStorage
+    // We initialize the state using a function that receives initial values from localStorage
     const [feedbackTypes, setFeedbackTypes] = useState(() => {
         const storedFeedback = JSON.parse(localStorage.getItem('feedbackTypes'));
         return storedFeedback || { good: 0, neutral: 0, bad: 0 };
     });
 
-    // Функція для оновлення стану в залежності від типу фідбеку
+    // A function to update the status depending on the type of feedback
     const updateFeedback = feedbackType => {
         setFeedbackTypes(prevFeedback => ({
             ...prevFeedback,
@@ -22,32 +22,32 @@ const App = () => {
         }));
     };
 
-    // Функція для скидання зібраних відгуків
+    // A function to reset collected feedback
     const resetFeedback = () => {
         setFeedbackTypes({ good: 0, neutral: 0, bad: 0 });
     };
 
-    // Зберігаємо стан у локальному сховищі при зміні
+    // We save the state in local storage when changing
     useEffect(() => {
         localStorage.setItem('feedbackTypes', JSON.stringify(feedbackTypes));
     }, [feedbackTypes]);
 
-    // Обчислення загальної кількості відгуків
+    // Calculation of the total number of reviews
     const totalFeedback = feedbackTypes.good + feedbackTypes.neutral + feedbackTypes.bad;
 
-    // Обчислення відсотка позитивних відгуків
+    // Calculation of the (%) of positive reviews
     const positivePercentage = Math.round((feedbackTypes.good / totalFeedback) * 100) || 0;
 
     return (
       <div>
         <Description />
-        {/* Передаємо функції updateFeedback та resetFeedback як пропс до компонента Options */}
+        {/* We pass the updateFeedback and resetFeedback functions as props to the Options component */}
             <Options
                 updateFeedback={updateFeedback}
                 resetFeedback={resetFeedback}
                 totalFeedback={totalFeedback}
             />
-            {/* Умовний рендеринг для відображення компонента Feedback або повідомлення */}
+            {/* Conditional rendering to display a Feedback component or a message */}
             {totalFeedback > 0 ? (
                 <Feedback
                     feedbackTypes={feedbackTypes}
